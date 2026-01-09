@@ -17,7 +17,19 @@ Let's explore.
 Here is a boxplot of Sepal widths by species.
 
 ```{r}
+#| echo: false
+#| fig-width: 4
+#| fig-height: 5.5
+#| fig-align: center
+#| fig-cap: "Figure 1: Iris boxplot"
 boxplot(Sepal.Width ~ Species, data = iris, col='blue')
 ```
 
 The `echo: false` option disables the printing of code (only output is displayed).
+
+### Summary table
+
+```{r}
+tapply(iris$Sepal.Width, iris$Species, mean)
+```
+
