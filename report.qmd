@@ -1,7 +1,9 @@
 ---
 title: "Exploring Iris Data Set"
 author: "Phil Lombardo"
-format: html
+format: 
+  html:
+    embed-resources: true
 ---
 
 ## Summary
@@ -22,6 +24,7 @@ Here is a boxplot of Sepal widths by species.
 #| fig-height: 5.5
 #| fig-align: center
 #| fig-cap: "Figure 1: Iris boxplot"
+
 boxplot(Sepal.Width ~ Species, data = iris, col='blue')
 ```
 
