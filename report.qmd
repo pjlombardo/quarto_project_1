@@ -45,3 +45,71 @@ The `echo: false` option disables the printing of code (only output is displayed
 tapply(iris$Sepal.Width, iris$Species, mean)
 ```
 
+# Creating our spotify visual
+
+```{r}
+library(tidyverse)
+library(patchwork)
+spotify <- read.csv("data/spotify.csv")
+```
+  
+```{r}
+mid_plot <- ggplot(data = spotify,
+       aes(x = mode,
+           y = danceability,
+           fill = mode))+
+  geom_boxplot(alpha = .3)+
+  geom_jitter(aes(color = mode), alpha = .2, width = .05) +
+  scale_fill_manual(values = c("blue","red"))+
+  scale_color_manual(values = c("blue","red"))+
+  labs(y = "")+
+  theme_bw() +
+  theme(legend.position = "none")
+
+left_plot <- spotify %>%
+  filter(mode == "Major") %>%    # this data frame now only contains "major"
+  ggplot(data = .,
+         aes(x = danceability)) + 
+  geom_histogram(bins = 10,
+                 fill = "blue",
+                 colour = "white",
+                 alpha = .4) +
+  labs(x = "danceability",
+       y = "Major") +
+  scale_y_reverse()+
+  coord_flip() +
+  theme_bw()
+
+right_plot <- spotify %>%
+  filter(mode == "Minor") %>%    # this data frame now only contains "minor"
+  ggplot(data = .,
+         aes(x = danceability)) + 
+  geom_histogram(bins = 10,
+                 fill = "red",
+                 colour = "white",
+                 alpha = .4) +
+  labs(x = "",
+       y = "Minor") +
+  coord_flip() +
+  theme_bw()
+
+
+layout <- "
+ABBBC
+ABBBC
+"
+left_plot + mid_plot + right_plot + plot_layout(design = layout)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
