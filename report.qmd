@@ -48,12 +48,21 @@ tapply(iris$Sepal.Width, iris$Species, mean)
 # Creating our spotify visual
 
 ```{r}
+#| warning: false
+#| message: false
+#| echo: false
+
 library(tidyverse)
 library(patchwork)
 spotify <- read.csv("data/spotify.csv")
 ```
   
 ```{r}
+#| echo: false
+#| fig-align: center
+#| fig-height: 5
+#| fig-width: 7.5
+
 mid_plot <- ggplot(data = spotify,
        aes(x = mode,
            y = danceability,
@@ -93,13 +102,12 @@ right_plot <- spotify %>%
   coord_flip() +
   theme_bw()
 
-
 layout <- "
 ABBBC
 ABBBC
 "
-left_plot + mid_plot + right_plot + plot_layout(design = layout)
-
+left_plot + mid_plot + right_plot + plot_layout(design = layout) +
+  plot_annotation(title = "Dance-ability Score separated by Mode")
 ```
 
 
