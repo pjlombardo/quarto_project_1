@@ -12,20 +12,29 @@ The iris data set looks at several species of irises, and records some informati
 
 * `Species`: the species of iris
 * `Sepal.Width`: the width of the sepal part of the flower.
+* `Petal.Width`: the width of the petal part of the flower.
 
 Let's explore.
 
 ## Visual
-Here is a boxplot of Sepal widths by species.
+Here is a scatter plot of our main of variables of interest broken up by species.
 
 ```{r}
 #| echo: false
-#| fig-width: 4
+#| fig-width: 7
 #| fig-height: 5.5
 #| fig-align: center
-#| fig-cap: "Figure 1: Iris boxplot"
 
-boxplot(Sepal.Width ~ Species, data = iris, col='blue')
+library(ggplot2)
+ggplot(data = iris,
+       aes(x = Petal.Width, y = Sepal.Width)) +
+  geom_point(aes(color = Species)) + 
+  scale_color_brewer(palette = "Set2")+
+  scale_y_continuous(breaks = 2:5, limits = c(2, 5.1)) + 
+  theme_bw() + 
+  labs(x = "Petal Width (in)",
+       y = "Sepal Width (in)",
+       title = "Comparing Sepal and Petal Widths by Species")
 ```
 
 The `echo: false` option disables the printing of code (only output is displayed).
