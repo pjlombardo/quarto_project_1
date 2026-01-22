@@ -1,10 +1,35 @@
 ---
-title: "Exploring Iris Data Set"
+title: "Exploring Iris and Spotify Data Sets"
 author: "Phil Lombardo"
 format: 
   html:
     embed-resources: true
+    html-table-processing: none
 ---
+
+```{r}
+#| label: setup
+#| warning: false
+#| message: false
+#| echo: false
+
+library(tidyverse)
+library(patchwork)
+library(kableExtra)
+library(DT)
+
+
+spotify <- read.csv("data/spotify.csv")
+
+my_table_formatting <- function(table_input, ...){
+  table_input %>%
+    knitr::kable(...) %>%
+  kable_styling(full_width = FALSE,
+                bootstrap_options = c("hover","bordered")) %>%
+  column_spec(1, italic = TRUE)
+}
+```
+
 
 ## Summary
 
@@ -16,7 +41,7 @@ The iris data set looks at several species of irises, and records some informati
 
 Let's explore.
 
-## Visual
+## Iris Visual
 Here is a scatter plot of our main of variables of interest broken up by species.
 
 ```{r}
@@ -40,22 +65,57 @@ ggplot(data = iris,
 The `echo: false` option disables the printing of code (only output is displayed).
 
 ### Summary table
+(Strong recommendation: use `dplyr` to prepare and summarize your data.)
 
 ```{r}
-tapply(iris$Sepal.Width, iris$Species, mean)
-```
-
-# Creating our spotify visual
-
-```{r}
-#| warning: false
-#| message: false
 #| echo: false
 
-library(tidyverse)
-library(patchwork)
-spotify <- read.csv("data/spotify.csv")
+# tapply(iris$Sepal.Width, iris$Species, mean)
+
+iris %>%
+  group_by(Species) %>%
+  summarise(
+    sepal_widths_mean = mean(Sepal.Width),
+    sepal_widths_stdev = sd(Sepal.Width),
+    sample_size = n()
+  ) %>%
+  knitr::kable(col.names = c("Species", "Mean Sepal Widths", "Sepal Width Std. Deviations", "Sample Size"),
+               align = c('r', 'c', 'c', 'c')) %>%
+  kable_styling(full_width = FALSE,
+                bootstrap_options = c("hover","bordered")) %>%
+  column_spec(1, italic = TRUE) %>%
+  # row_spec(1, color='red') %>%
+  row_spec(2, background = 'lightblue',bold = TRUE)
 ```
+
+New summary using `my_table_formatting()`:
+
+```{r}
+iris %>%
+  group_by(Species) %>%
+  summarise(means = mean(Sepal.Length)) %>%
+  my_table_formatting(col.names = c("Species", "Mean Sepal Lengths"),
+                      align = c('r','c')) %>%
+  row_spec(3,color='red',bold = TRUE)
+```
+
+### HTML tables with `DT::datatable()` and spotify
+
+```{r}
+#| echo: false
+
+spotify %>%
+  group_by(key) %>%
+  summarise(
+    "Mean Streams (millions)" = mean(streams_mill)
+    ) %>%
+  DT::datatable()
+```
+
+
+
+
+# Creating our spotify visual
   
 ```{r}
 #| echo: false
